@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NBA Champions Trainer</title>
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        max-width: 700px;
+        margin: 40px auto;
+        padding: 20px;
+        text-align: center;
+        background: #f5f5f5;
+    }
+
+    h1 { margin-bottom: 10px; }
+
+    .card {
+        background: white;
+        padding: 30px;
+        border-radius: 15px;
+        box-shadow: 0 0 10px rgba(0,0,0,.15);
+    }
+
+    input {
+        padding: 10px;
+        font-size: 18px;
+        width: 80%;
+        margin: 15px 0;
+    }
+
+    button {
+        padding: 10px 20px;
+        font-size: 16px;
+        margin: 5px;
+        cursor: pointer;
+    }
+
+    #feedback {
+        font-size: 20px;
+        margin: 15px;
+        font-weight: bold;
+    }
+
+    #studyList {
+        text-align: left;
+        display: none;
+        margin-top: 20px;
+    }
+
+    .correct { color: green; }
+    .wrong { color: red; }
+</style>
+</head>
+
+<body>
+
+<div class="card">
+    <h1>🏆 NBA Champions Trainer</h1>
+    <p>Memorize every NBA champion from 2000–2026.</p>
+
+    <h2 id="question"></h2>
+
+    <input type="text" id="answer" placeholder="Type the champion">
+
+    <br>
+
+    <button onclick="checkAnswer()">Submit</button>
+    <button onclick="nextQuestion()">Skip</button>
+    <button onclick="toggleStudy()">Study Mode</button>
+
+    <div id="feedback"></div>
+
+    <p>
+        Score: <span id="score">0</span> |
+        Streak: <span id="streak">0</span>
+    </p>
+
+    <div id="studyList"></div>
+</div>
+
+<script>
+const champions = {
+    2000: "Los Angeles Lakers",
+    2001: "Los Angeles Lakers",
+    2002: "Los Angeles Lakers",
+    2003: "San Antonio Spurs",
+    2004: "Detroit Pistons",
+    2005: "San Antonio Spurs",
+    2006: "Miami Heat",
+    2007: "San Antonio Spurs",
+    2008: "Boston Celtics",
+    2009: "Los Angeles Lakers",
+    2010: "Los Angeles Lakers",
+    2011: "Dallas Mavericks",
+    2012: "Miami Heat",
+    2013: "Miami Heat",
+    2014: "San Antonio Spurs",
+    2015: "Golden State Warriors",
+    2016: "Cleveland Cavaliers",
+    2017: "Golden State Warriors",
+    2018: "Golden State Warriors",
+    2019: "Toronto Raptors",
+    2020: "Los Angeles Lakers",
+    2021: "Milwaukee Bucks",
+    2022: "Golden State Warriors",
+    2023: "Denver Nuggets",
+    2024: "Boston Celtics",
+    2025: "Oklahoma City Thunder",
+    2026: "New York Knicks"
+};
+
+let years = Object.keys(champions);
+let currentYear;
+let score = 0;
+let streak = 0;
+
+function nextQuestion() {
+    currentYear = years[Math.floor(Math.random() * years.length)];
+
+    document.getElementById("question").textContent =
+        "Who won the NBA Championship in " + currentYear + "?";
+
+    document.getElementById("answer").value = "";
+    document.getElementById("feedback").textContent = "";
+}
+
+function normalize(text) {
+    return text.toLowerCase().replace(/[^a-z]/g, "");
+}
+
+function checkAnswer() {
+    const userAnswer = normalize(document.getElementById("answer").value);
+    const correct = normalize(champions[currentYear]);
+
+    if (userAnswer === correct) {
+        score++;
+        streak++;
+
+        document.getElementById("feedback").textContent = "✅ Correct!";
+        document.getElementById("feedback").className = "correct";
+    } else {
+        streak = 0;
+
+        document.getElementById("feedback").textContent =
+            "❌ " + champions[currentYear];
+
+        document.getElementById("feedback").className = "wrong";
+    }
+
+    document.getElementById("score").textContent = score;
+    document.getElementById("streak").textContent = streak;
+
+    setTimeout(nextQuestion, 1500);
+}
+
+document.getElementById("answer").addEventListener("keypress", function(e) {
+    if (e.key === "Enter") {
+        checkAnswer();
+    }
+});
+
+function toggleStudy() {
+    const study = document.getElementById("studyList");
+
+    if (study.style.display === "block") {
+        study.style.display = "none";
+        return;
+    }
+
+    let html = "<h3>Study List</h3><ul>";
+
+    for (const year of years) {
+        html += `<li><strong>${year}</strong>: ${champions[year]}</li>`;
+    }
+
+    html += "</ul>";
+
+    study.innerHTML = html;
+    study.style.display = "block";
+}
+
+nextQuestion();
+</script>
+
+</body>
+</html>
