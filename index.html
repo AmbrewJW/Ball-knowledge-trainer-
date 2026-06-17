@@ -3,186 +3,337 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>NBA Champions Trainer</title>
+<title>Elite Ball Knowledge Trainer</title>
 
 <style>
-    body {
-        font-family: Arial, sans-serif;
-        max-width: 700px;
-        margin: 40px auto;
-        padding: 20px;
-        text-align: center;
-        background: #f5f5f5;
-    }
+body{
+    font-family: Arial, sans-serif;
+    background:#f4f4f4;
+    text-align:center;
+    padding:20px;
+}
 
-    h1 { margin-bottom: 10px; }
+.card{
+    background:white;
+    max-width:900px;
+    margin:auto;
+    padding:25px;
+    border-radius:15px;
+    box-shadow:0 0 10px rgba(0,0,0,.15);
+}
 
-    .card {
-        background: white;
-        padding: 30px;
-        border-radius: 15px;
-        box-shadow: 0 0 10px rgba(0,0,0,.15);
-    }
+.mode-btn{
+    width:100%;
+    padding:14px;
+    margin:6px 0;
+    font-size:16px;
+    cursor:pointer;
+}
 
-    input {
-        padding: 10px;
-        font-size: 18px;
-        width: 80%;
-        margin: 15px 0;
-    }
+input{
+    width:80%;
+    padding:12px;
+    font-size:18px;
+    margin:10px;
+}
 
-    button {
-        padding: 10px 20px;
-        font-size: 16px;
-        margin: 5px;
-        cursor: pointer;
-    }
+button{
+    padding:12px 18px;
+    margin:5px;
+    font-size:16px;
+}
 
-    #feedback {
-        font-size: 20px;
-        margin: 15px;
-        font-weight: bold;
-    }
+.correct{
+    color:green;
+    font-weight:bold;
+}
 
-    #studyList {
-        text-align: left;
-        display: none;
-        margin-top: 20px;
-    }
-
-    .correct { color: green; }
-    .wrong { color: red; }
+.wrong{
+    color:red;
+    font-weight:bold;
+}
 </style>
 </head>
 
 <body>
 
 <div class="card">
-    <h1>🏆 NBA Champions Trainer</h1>
-    <p>Memorize every NBA champion from 2000–2026.</p>
 
-    <h2 id="question"></h2>
+<h1>🏀 Elite Ball Knowledge Trainer</h1>
 
-    <input type="text" id="answer" placeholder="Type the champion">
+<h3>Select a Mode</h3>
 
-    <br>
+<div id="modes"></div>
 
-    <button onclick="checkAnswer()">Submit</button>
-    <button onclick="nextQuestion()">Skip</button>
-    <button onclick="toggleStudy()">Study Mode</button>
+<hr>
 
-    <div id="feedback"></div>
+<h2 id="question">Choose a mode to begin.</h2>
 
-    <p>
-        Score: <span id="score">0</span> |
-        Streak: <span id="streak">0</span>
-    </p>
+<input id="answer" placeholder="Type your answer">
 
-    <div id="studyList"></div>
+<br>
+
+<button onclick="checkAnswer()">Submit</button>
+<button onclick="nextQuestion()">Skip</button>
+
+<div id="feedback"></div>
+
+<p>
+Score: <span id="score">0</span>
+|
+Streak: <span id="streak">0</span>
+</p>
+
+<p>
+Mode:
+<span id="currentMode">None</span>
+</p>
+
 </div>
 
 <script>
-const champions = {
-    2000: "Los Angeles Lakers",
-    2001: "Los Angeles Lakers",
-    2002: "Los Angeles Lakers",
-    2003: "San Antonio Spurs",
-    2004: "Detroit Pistons",
-    2005: "San Antonio Spurs",
-    2006: "Miami Heat",
-    2007: "San Antonio Spurs",
-    2008: "Boston Celtics",
-    2009: "Los Angeles Lakers",
-    2010: "Los Angeles Lakers",
-    2011: "Dallas Mavericks",
-    2012: "Miami Heat",
-    2013: "Miami Heat",
-    2014: "San Antonio Spurs",
-    2015: "Golden State Warriors",
-    2016: "Cleveland Cavaliers",
-    2017: "Golden State Warriors",
-    2018: "Golden State Warriors",
-    2019: "Toronto Raptors",
-    2020: "Los Angeles Lakers",
-    2021: "Milwaukee Bucks",
-    2022: "Golden State Warriors",
-    2023: "Denver Nuggets",
-    2024: "Boston Celtics",
-    2025: "Oklahoma City Thunder",
-    2026: "New York Knicks"
+
+const modes = {
+
+"Champions 2000-2026": {
+2000:"Los Angeles Lakers",
+2001:"Los Angeles Lakers",
+2002:"Los Angeles Lakers",
+2003:"San Antonio Spurs",
+2004:"Detroit Pistons",
+2005:"San Antonio Spurs",
+2006:"Miami Heat",
+2007:"San Antonio Spurs",
+2008:"Boston Celtics",
+2009:"Los Angeles Lakers",
+2010:"Los Angeles Lakers",
+2011:"Dallas Mavericks",
+2012:"Miami Heat",
+2013:"Miami Heat",
+2014:"San Antonio Spurs",
+2015:"Golden State Warriors",
+2016:"Cleveland Cavaliers",
+2017:"Golden State Warriors",
+2018:"Golden State Warriors",
+2019:"Toronto Raptors",
+2020:"Los Angeles Lakers",
+2021:"Milwaukee Bucks",
+2022:"Golden State Warriors",
+2023:"Denver Nuggets",
+2024:"Boston Celtics",
+2025:"Oklahoma City Thunder",
+2026:"New York Knicks"
+},
+
+"Finals MVPs 2000-2026": {
+2000:"Shaquille O'Neal",
+2001:"Shaquille O'Neal",
+2002:"Shaquille O'Neal",
+2003:"Tim Duncan",
+2004:"Chauncey Billups",
+2005:"Tim Duncan",
+2006:"Dwyane Wade",
+2007:"Tony Parker",
+2008:"Paul Pierce",
+2009:"Kobe Bryant",
+2010:"Kobe Bryant",
+2011:"Dirk Nowitzki",
+2012:"LeBron James",
+2013:"LeBron James",
+2014:"Kawhi Leonard",
+2015:"Andre Iguodala",
+2016:"LeBron James",
+2017:"Kevin Durant",
+2018:"Kevin Durant",
+2019:"Kawhi Leonard",
+2020:"LeBron James",
+2021:"Giannis Antetokounmpo",
+2022:"Stephen Curry",
+2023:"Nikola Jokic",
+2024:"Jaylen Brown",
+2025:"Shai Gilgeous-Alexander",
+2026:"Jalen Brunson"
+},
+
+"MVPs 2000-2026": {
+2000:"Shaquille O'Neal",
+2001:"Allen Iverson",
+2002:"Tim Duncan",
+2003:"Tim Duncan",
+2004:"Kevin Garnett",
+2005:"Steve Nash",
+2006:"Steve Nash",
+2007:"Dirk Nowitzki",
+2008:"Kobe Bryant",
+2009:"LeBron James",
+2010:"LeBron James",
+2011:"Derrick Rose",
+2012:"LeBron James",
+2013:"LeBron James",
+2014:"Kevin Durant",
+2015:"Stephen Curry",
+2016:"Stephen Curry",
+2017:"Russell Westbrook",
+2018:"James Harden",
+2019:"Giannis Antetokounmpo",
+2020:"Giannis Antetokounmpo",
+2021:"Nikola Jokic",
+2022:"Nikola Jokic",
+2023:"Joel Embiid",
+2024:"Nikola Jokic",
+2025:"Shai Gilgeous-Alexander",
+2026:"Shai Gilgeous-Alexander"
+},
+
+"Champions All-Time": {
+1947:"Philadelphia Warriors",
+1948:"Baltimore Bullets",
+1949:"Minneapolis Lakers",
+1950:"Minneapolis Lakers",
+1951:"Rochester Royals",
+1952:"Minneapolis Lakers",
+1953:"Minneapolis Lakers",
+1954:"Minneapolis Lakers",
+1955:"Syracuse Nationals",
+1956:"Philadelphia Warriors"
+},
+
+"Finals MVPs All-Time": {
+1969:"Jerry West",
+1970:"Willis Reed",
+1971:"Lew Alcindor",
+1972:"Wilt Chamberlain",
+1973:"Willis Reed",
+1974:"John Havlicek"
+},
+
+"MVPs All-Time": {
+1956:"Bob Pettit",
+1957:"Bob Cousy",
+1958:"Bill Russell",
+1959:"Bob Pettit",
+1960:"Wilt Chamberlain",
+1961:"Bill Russell",
+1962:"Bill Russell",
+1963:"Bill Russell",
+1964:"Oscar Robertson",
+1965:"Bill Russell"
+}
+
 };
 
-let years = Object.keys(champions);
-let currentYear;
+const modesDiv = document.getElementById("modes");
+
+Object.keys(modes).forEach(mode => {
+
+    const btn = document.createElement("button");
+
+    btn.className = "mode-btn";
+
+    btn.textContent = mode;
+
+    btn.onclick = () => setMode(mode);
+
+    modesDiv.appendChild(btn);
+
+});
+
+let currentData = null;
+let years = [];
+let currentYear = null;
+
 let score = 0;
 let streak = 0;
 
-function nextQuestion() {
-    currentYear = years[Math.floor(Math.random() * years.length)];
+function setMode(mode){
+
+    currentData = modes[mode];
+
+    years = Object.keys(currentData);
+
+    document.getElementById("currentMode").textContent = mode;
+
+    nextQuestion();
+
+}
+
+function nextQuestion(){
+
+    if(!currentData) return;
+
+    currentYear =
+        years[Math.floor(Math.random()*years.length)];
 
     document.getElementById("question").textContent =
-        "Who won the NBA Championship in " + currentYear + "?";
+        `Who won ${document.getElementById("currentMode").textContent} in ${currentYear}?`;
 
     document.getElementById("answer").value = "";
+
     document.getElementById("feedback").textContent = "";
+
 }
 
-function normalize(text) {
-    return text.toLowerCase().replace(/[^a-z]/g, "");
+function normalize(text){
+
+    return text
+        .toLowerCase()
+        .replace(/[^a-z]/g,'');
+
 }
 
-function checkAnswer() {
-    const userAnswer = normalize(document.getElementById("answer").value);
-    const correct = normalize(champions[currentYear]);
+function checkAnswer(){
 
-    if (userAnswer === correct) {
+    if(!currentData) return;
+
+    const user =
+        normalize(document.getElementById("answer").value);
+
+    const correct =
+        normalize(currentData[currentYear]);
+
+    const feedback =
+        document.getElementById("feedback");
+
+    if(user === correct){
+
         score++;
         streak++;
 
-        document.getElementById("feedback").textContent = "✅ Correct!";
-        document.getElementById("feedback").className = "correct";
+        feedback.textContent = "✅ Correct!";
+        feedback.className = "correct";
+
     } else {
+
         streak = 0;
 
-        document.getElementById("feedback").textContent =
-            "❌ " + champions[currentYear];
+        feedback.textContent =
+            "❌ " + currentData[currentYear];
 
-        document.getElementById("feedback").className = "wrong";
+        feedback.className = "wrong";
+
     }
 
-    document.getElementById("score").textContent = score;
-    document.getElementById("streak").textContent = streak;
+    document.getElementById("score").textContent =
+        score;
 
-    setTimeout(nextQuestion, 1500);
+    document.getElementById("streak").textContent =
+        streak;
+
+    setTimeout(nextQuestion, 1200);
+
 }
 
-document.getElementById("answer").addEventListener("keypress", function(e) {
-    if (e.key === "Enter") {
+document.getElementById("answer")
+.addEventListener("keypress", function(e){
+
+    if(e.key === "Enter"){
+
         checkAnswer();
+
     }
+
 });
 
-function toggleStudy() {
-    const study = document.getElementById("studyList");
-
-    if (study.style.display === "block") {
-        study.style.display = "none";
-        return;
-    }
-
-    let html = "<h3>Study List</h3><ul>";
-
-    for (const year of years) {
-        html += `<li><strong>${year}</strong>: ${champions[year]}</li>`;
-    }
-
-    html += "</ul>";
-
-    study.innerHTML = html;
-    study.style.display = "block";
-}
-
-nextQuestion();
 </script>
 
 </body>
